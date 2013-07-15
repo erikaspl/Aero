@@ -1,0 +1,47 @@
+﻿<div class="row-fluid">
+    <div class="span4">
+        <form class="form-inline" ng-submit="searchClick()">
+            <div class="control-group input-append">
+                <input type="text" name="partNumberSearch" placeholder="Part Number" ng-model="searchPartText" />
+                <button type="submit" class="btn">Search</button>
+            </div>
+        </form>
+    </div>
+    <div class="span4 text-center">
+        <span ng-hide="hidePagination()">
+            <pagination id="partsPagination" num-pages="noOfPages" current-page="currentPage" class="pagination-small" max-size="maxSize" previous-text="&laquo;" next-text="&raquo;"></pagination>
+        </span>
+    </div>
+    <div class="span2 offset2">
+        <div class="pull-right">
+            <span class="label">
+                <ng-pluralize count="totalItems" when="totalItemsMessage"></ng-pluralize>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="searchGridWrapper">
+        <div class="span12">
+            <div id="rezGrid">
+            <!--<div fade-in-right="partsLoaded" fade-in-duration="400" ng-init="partsLoaded=true;">-->
+                <div class="searchGrid" ng-grid="gridOptions"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-controller="RfqCtrl">
+    <div modal="shouldBeOpen" close="close()" options="modalopts">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">×</button>
+            <h3>Request for Quotation</h3>
+        </div>
+        <div class="modal-body">
+            <part-summary part="part" rfq="rfq" quantities="quantities" priorities="priorities" />
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn" ng-click="close()">Close</button>
+            <button class="btn btn-primary" ng-click="submitRfq()">Save changes</button>
+        </div>
+    </div>
+</div>

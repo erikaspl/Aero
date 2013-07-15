@@ -1,0 +1,596 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Aero.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="AeroStoreContainer">
+    <EntitySet Name="Vendors" EntityType="Aero.Store.Vendors" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Contacts" EntityType="Aero.Store.Contacts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Parts" EntityType="Aero.Store.Parts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Customers" EntityType="Aero.Store.Customers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RFQs" EntityType="Aero.Store.RFQs" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="POes" EntityType="Aero.Store.POes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Priorities" EntityType="Aero.Store.Priorities" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="VendorPart" Association="Aero.Store.VendorPart">
+      <End Role="Vendor" EntitySet="Vendors" />
+      <End Role="Part" EntitySet="Parts" />
+    </AssociationSet>
+    <AssociationSet Name="ContactVendor" Association="Aero.Store.ContactVendor">
+      <End Role="Contact" EntitySet="Contacts" />
+      <End Role="Vendor" EntitySet="Vendors" />
+    </AssociationSet>
+    <AssociationSet Name="RFQPart" Association="Aero.Store.RFQPart">
+      <End Role="RFQ" EntitySet="RFQs" />
+      <End Role="Part" EntitySet="Parts" />
+    </AssociationSet>
+    <AssociationSet Name="POPart" Association="Aero.Store.POPart">
+      <End Role="PO" EntitySet="POes" />
+      <End Role="Part" EntitySet="Parts" />
+    </AssociationSet>
+    <AssociationSet Name="PriorityRFQ" Association="Aero.Store.PriorityRFQ">
+      <End Role="Priority" EntitySet="Priorities" />
+      <End Role="RFQ" EntitySet="RFQs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ContactCustommer" Association="Aero.Store.FK_ContactCustommer">
+      <End Role="Contact" EntitySet="Contacts" />
+      <End Role="Customer" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_POCustomer" Association="Aero.Store.FK_POCustomer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="PO" EntitySet="POes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RFQCustomer" Association="Aero.Store.FK_RFQCustomer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="RFQ" EntitySet="RFQs" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Vendors">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ContactId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Contacts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Phone" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Fax" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Address1" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Address2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Address3" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="City" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="County" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="PostCode" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Country" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Type" Type="int" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Parts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PartNumber" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Qty" Type="smallint" Nullable="false" DefaultValue="0" />
+    <Property Name="Condition" Type="int" Nullable="false" />
+    <Property Name="Price" Type="decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+    <Property Name="Source" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="NSN" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Model" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="VendorId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Customers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ContactId" Type="int" Nullable="true" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RFQs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="YourRef" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Qty" Type="smallint" Nullable="false" DefaultValue="1" />
+    <Property Name="NeedBy" Type="datetime" Nullable="true" />
+    <Property Name="Comment" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PriorityId" Type="int" Nullable="false" />
+    <Property Name="Customer_Id" Type="int" Nullable="false" />
+    <Property Name="Part_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="POes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Number" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UnitPrice" Type="decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="Qty" Type="smallint" Nullable="false" />
+    <Property Name="DeliveryDate" Type="datetime" Nullable="false" />
+    <Property Name="Comment" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Customer_Id" Type="int" Nullable="false" />
+    <Property Name="Part_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Priorities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Code" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Display" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <Association Name="VendorPart">
+    <End Role="Vendor" Type="Aero.Store.Vendors" Multiplicity="1" />
+    <End Role="Part" Type="Aero.Store.Parts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vendor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Part">
+        <PropertyRef Name="VendorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ContactVendor">
+    <End Role="Contact" Type="Aero.Store.Contacts" Multiplicity="1" />
+    <End Role="Vendor" Type="Aero.Store.Vendors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Contact">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Vendor">
+        <PropertyRef Name="ContactId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="RFQPart">
+    <End Role="RFQ" Type="Aero.Store.RFQs" Multiplicity="*" />
+    <End Role="Part" Type="Aero.Store.Parts" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Part">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RFQ">
+        <PropertyRef Name="Part_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="POPart">
+    <End Role="PO" Type="Aero.Store.POes" Multiplicity="*" />
+    <End Role="Part" Type="Aero.Store.Parts" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Part">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PO">
+        <PropertyRef Name="Part_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PriorityRFQ">
+    <End Role="Priority" Type="Aero.Store.Priorities" Multiplicity="1" />
+    <End Role="RFQ" Type="Aero.Store.RFQs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Priority">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RFQ">
+        <PropertyRef Name="PriorityId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ContactCustommer">
+    <End Role="Contact" Type="Aero.Store.Contacts" Multiplicity="0..1" />
+    <End Role="Customer" Type="Aero.Store.Customers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Contact">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Customer">
+        <PropertyRef Name="ContactId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_POCustomer">
+    <End Role="Customer" Type="Aero.Store.Customers" Multiplicity="1" />
+    <End Role="PO" Type="Aero.Store.POes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PO">
+        <PropertyRef Name="Customer_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RFQCustomer">
+    <End Role="Customer" Type="Aero.Store.Customers" Multiplicity="1" />
+    <End Role="RFQ" Type="Aero.Store.RFQs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RFQ">
+        <PropertyRef Name="Customer_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Aero" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="AeroContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Vendors" EntityType="Aero.Vendor" />
+          <EntitySet Name="Contacts" EntityType="Aero.Contact" />
+          <EntitySet Name="Parts" EntityType="Aero.Part" />
+          <AssociationSet Name="VendorPart" Association="Aero.VendorPart">
+            <End Role="Vendor" EntitySet="Vendors" />
+            <End Role="Part" EntitySet="Parts" />
+          </AssociationSet>
+          <EntitySet Name="Customers" EntityType="Aero.Customer" />
+          <AssociationSet Name="ContactVendor" Association="Aero.ContactVendor">
+            <End Role="Contact" EntitySet="Contacts" />
+            <End Role="Vendor" EntitySet="Vendors" />
+          </AssociationSet>
+          <EntitySet Name="RFQs" EntityType="Aero.RFQ" />
+          <AssociationSet Name="RFQPart" Association="Aero.RFQPart">
+            <End Role="RFQ" EntitySet="RFQs" />
+            <End Role="Part" EntitySet="Parts" />
+          </AssociationSet>
+          <EntitySet Name="POes" EntityType="Aero.PO" />
+          <AssociationSet Name="POPart" Association="Aero.POPart">
+            <End Role="PO" EntitySet="POes" />
+            <End Role="Part" EntitySet="Parts" />
+          </AssociationSet>
+          <EntitySet Name="Priorities" EntityType="Aero.Priority" />
+          <AssociationSet Name="PriorityRFQ" Association="Aero.PriorityRFQ">
+            <End Role="Priority" EntitySet="Priorities" />
+            <End Role="RFQ" EntitySet="RFQs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ContactCustommer" Association="Aero.FK_ContactCustommer">
+            <End Role="Contact" EntitySet="Contacts" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_POCustomer" Association="Aero.FK_POCustomer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="PO" EntitySet="POes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RFQCustomer" Association="Aero.FK_RFQCustomer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="RFQ" EntitySet="RFQs" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Vendor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Parts" Relationship="Aero.VendorPart" FromRole="Vendor" ToRole="Part" />
+          <NavigationProperty Name="Contact" Relationship="Aero.ContactVendor" FromRole="Vendor" ToRole="Contact" />
+          <Property Type="Int32" Name="ContactId" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Contact">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="Phone" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="Fax" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="Address1" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="Address2" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="Address3" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="City" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="County" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="PostCode" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="Country" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="Aero.ContactType" Name="Type" Nullable="true" />
+          <NavigationProperty Name="Vendors" Relationship="Aero.ContactVendor" FromRole="Contact" ToRole="Vendor" />
+          <NavigationProperty Name="Customers" Relationship="Aero.FK_ContactCustommer" FromRole="Contact" ToRole="Customer" />
+          </EntityType>
+        <EnumType Name="ContactType">
+          <Member Name="Home" />
+          <Member Name="Businness" />
+        </EnumType>
+        <EntityType Name="Part">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="PartNumber" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="Int16" Name="Qty" Nullable="false" DefaultValue="0" />
+          <Property Type="Aero.Condition" Name="Condition" Nullable="false" />
+          <Property Type="Decimal" Name="Price" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="DateTime" Name="UpdateDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Source" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="NSN" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="Model" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Vendor" Relationship="Aero.VendorPart" FromRole="Part" ToRole="Vendor" />
+          <Property Type="Int32" Name="VendorId" Nullable="false" />
+          <NavigationProperty Name="RFQs" Relationship="Aero.RFQPart" FromRole="Part" ToRole="RFQ" />
+          <NavigationProperty Name="POes" Relationship="Aero.POPart" FromRole="Part" ToRole="PO" />
+        </EntityType>
+        <EnumType Name="Condition">
+          <Member Name="New" />
+          <Member Name="Used" />
+        </EnumType>
+        <Association Name="VendorPart">
+          <End Type="Aero.Vendor" Role="Vendor" Multiplicity="1" />
+          <End Type="Aero.Part" Role="Part" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendor">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Part">
+              <PropertyRef Name="VendorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="ContactId" Nullable="true" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Contact" Relationship="Aero.FK_ContactCustommer" FromRole="Customer" ToRole="Contact" />
+          <NavigationProperty Name="POes" Relationship="Aero.FK_POCustomer" FromRole="Customer" ToRole="PO" />
+          <NavigationProperty Name="RFQs" Relationship="Aero.FK_RFQCustomer" FromRole="Customer" ToRole="RFQ" />
+          <Property Type="String" Name="UserName" Nullable="false" FixedLength="false" MaxLength="Max" Unicode="true" />
+        </EntityType>
+        <Association Name="ContactVendor">
+          <End Type="Aero.Contact" Role="Contact" Multiplicity="1" />
+          <End Type="Aero.Vendor" Role="Vendor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Vendor">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="RFQ">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Part" Relationship="Aero.RFQPart" FromRole="RFQ" ToRole="Part" />
+          <Property Type="String" Name="YourRef" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="Int16" Name="Qty" Nullable="false" DefaultValue="1" />
+          <Property Type="DateTime" Name="NeedBy" Nullable="true" Precision="3" />
+          <Property Type="String" Name="Comment" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Priority" Relationship="Aero.PriorityRFQ" FromRole="RFQ" ToRole="Priority" />
+          <Property Type="Int32" Name="PriorityId" Nullable="false" />
+          <Property Type="Int32" Name="Customer_Id" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="Aero.FK_RFQCustomer" FromRole="RFQ" ToRole="Customer" />
+          </EntityType>
+        <Association Name="RFQPart">
+          <End Type="Aero.RFQ" Role="RFQ" Multiplicity="*" />
+          <End Type="Aero.Part" Role="Part" Multiplicity="1" />
+        </Association>
+        <EntityType Name="PO">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Part" Relationship="Aero.POPart" FromRole="PO" ToRole="Part" />
+          <Property Type="String" Name="Number" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="Decimal" Name="UnitPrice" Nullable="false" Scale="2" Precision="18" />
+          <Property Type="Int16" Name="Qty" Nullable="false" />
+          <Property Type="DateTime" Name="DeliveryDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Comment" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="Int32" Name="Customer_Id" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="Aero.FK_POCustomer" FromRole="PO" ToRole="Customer" />
+          </EntityType>
+        <Association Name="POPart">
+          <End Type="Aero.PO" Role="PO" Multiplicity="*" />
+          <End Type="Aero.Part" Role="Part" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Priority">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Code" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="Display" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="RFQs" Relationship="Aero.PriorityRFQ" FromRole="Priority" ToRole="RFQ" />
+        </EntityType>
+        <Association Name="PriorityRFQ">
+          <End Type="Aero.Priority" Role="Priority" Multiplicity="1" />
+          <End Type="Aero.RFQ" Role="RFQ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Priority">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RFQ">
+              <PropertyRef Name="PriorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ContactCustommer">
+          <End Type="Aero.Contact" Role="Contact" Multiplicity="0..1" />
+          <End Type="Aero.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_POCustomer">
+          <End Type="Aero.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="Aero.PO" Role="PO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PO">
+              <PropertyRef Name="Customer_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RFQCustomer">
+          <End Type="Aero.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="Aero.RFQ" Role="RFQ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RFQ">
+              <PropertyRef Name="Customer_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="AeroStoreContainer" CdmEntityContainer="AeroContainer">
+    <EntitySetMapping Name="Vendors">
+      <EntityTypeMapping TypeName="IsTypeOf(Aero.Vendor)">
+        <MappingFragment StoreEntitySet="Vendors">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Contacts">
+      <EntityTypeMapping TypeName="IsTypeOf(Aero.Contact)">
+        <MappingFragment StoreEntitySet="Contacts">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Fax" ColumnName="Fax" />
+          <ScalarProperty Name="Address1" ColumnName="Address1" />
+          <ScalarProperty Name="Address2" ColumnName="Address2" />
+          <ScalarProperty Name="Address3" ColumnName="Address3" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="County" ColumnName="County" />
+          <ScalarProperty Name="PostCode" ColumnName="PostCode" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Parts">
+      <EntityTypeMapping TypeName="IsTypeOf(Aero.Part)">
+        <MappingFragment StoreEntitySet="Parts">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="Condition" ColumnName="Condition" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="Source" ColumnName="Source" />
+          <ScalarProperty Name="NSN" ColumnName="NSN" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="VendorId" ColumnName="VendorId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Customers">
+      <EntityTypeMapping TypeName="IsTypeOf(Aero.Customer)">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RFQs">
+      <EntityTypeMapping TypeName="IsTypeOf(Aero.RFQ)">
+        <MappingFragment StoreEntitySet="RFQs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="YourRef" ColumnName="YourRef" />
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="NeedBy" ColumnName="NeedBy" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
+          <ScalarProperty Name="Customer_Id" ColumnName="Customer_Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="POes">
+      <EntityTypeMapping TypeName="IsTypeOf(Aero.PO)">
+        <MappingFragment StoreEntitySet="POes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="Customer_Id" ColumnName="Customer_Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Priorities">
+      <EntityTypeMapping TypeName="IsTypeOf(Aero.Priority)">
+        <MappingFragment StoreEntitySet="Priorities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Display" ColumnName="Display" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="RFQPart" TypeName="Aero.RFQPart" StoreEntitySet="RFQs">
+      <EndProperty Name="Part">
+        <ScalarProperty Name="Id" ColumnName="Part_Id" />
+      </EndProperty>
+      <EndProperty Name="RFQ">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="POPart" TypeName="Aero.POPart" StoreEntitySet="POes">
+      <EndProperty Name="Part">
+        <ScalarProperty Name="Id" ColumnName="Part_Id" />
+      </EndProperty>
+      <EndProperty Name="PO">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

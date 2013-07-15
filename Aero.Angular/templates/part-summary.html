@@ -1,0 +1,46 @@
+﻿<article class="thumbnail" style="background-color: whitesmoke">
+    <span class="centered">
+        <h4>{{part.partNumber}}</h4>
+    </span>
+    <table class="table" style="background-color: white">
+        <tr>
+            <td>Model:</td>
+            <td>{{part.model}}</td>
+        </tr>
+        <tr>
+            <td>Description:</td>
+            <td>{{part.description}}</td>
+        </tr>
+        <tr>
+            <td>Condition:</td>
+            <td>{{part.condition}}</td>
+        </tr>        
+        <tr>
+            <td><small>Quantity:</small></td>
+            <td>
+                <select class="span1" ng-model="rfq.qty" ng-options="value as value for (key, value) in quantities" data-style="btn-primary" bs-select></select>
+            </td>
+        </tr>
+        <tr>
+            <td><small>Need by:</small></td>
+            <td>
+                <div class="control-group input-append">
+                    <input type="text" class="input-small" ng-model="rfq.needBy" data-date-format="dd/mm/yyyy" bs-datepicker>
+                    <button type="button" class="btn" data-toggle="datepicker"><i class="icon-calendar"></i></button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td><small>Priority:</small></td>
+            <td>
+                <select class="span2" ng-model="rfq.priority" ng-options="value.id as value.code for (key, value) in priorities" data-style="btn-primary" bs-select></select>
+            </td>
+        </tr>
+        <tr>
+            <td><small>Comment:</small></td>
+            <td>
+                <textarea class="span2 non-resizable" rows="3" ng-model="rfq.comment"></textarea>
+            </td>
+        </tr>
+    </table>    
+</article>

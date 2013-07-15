@@ -1,0 +1,40 @@
+﻿@model Aero.Angular.Models.LoginModel
+@{
+    ViewBag.Title = "Aero";
+}
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    <div id="main-content" data-ng-app="aero">
+        @if (@User.Identity.IsAuthenticated)
+        {
+            <div data-ng-view></div> <!-- The SPA Views go here -->
+        }
+        else
+        {
+            @Html.Partial("_Authentication")
+        }
+    </div>
+</div>
+
+@if (@User.Identity.IsAuthenticated)
+{
+    <input id="antiForgeryToken" type="hidden" value="@GetAntiForgeryToken()" />
+
+    @section scripts {
+        @Scripts.Render("~/bundles/jslib")
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/angular")
+        @Scripts.Render("~/bundles/breeze")
+        @Scripts.Render("~/bundles/aero")
+    }
+}
