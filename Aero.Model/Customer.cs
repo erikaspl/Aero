@@ -16,8 +16,8 @@ namespace Aero.Model
     {
         public Customer()
         {
-            this.POes = new HashSet<PO>();
             this.RFQs = new HashSet<RFQ>();
+            this.POes = new HashSet<PO>();
         }
     
         public int Id { get; set; }
@@ -26,7 +26,7 @@ namespace Aero.Model
         public string UserName { get; set; }
     
         public virtual Contact Contact { get; set; }
-        public virtual ICollection<PO> POes { get; set; }
         public virtual ICollection<RFQ> RFQs { get; set; }
+        public virtual ICollection<PO> POes { get; set; }
     }
 }

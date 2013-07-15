@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 07/12/2013 11:22:49
+-- Date Created: 07/15/2013 17:11:09
 -- Generated from EDMX file: C:\Dropbox\dev\Aero\Aero.EF\Aero.edmx
 -- --------------------------------------------------
 
@@ -23,9 +23,6 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_ContactVendor]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Vendors] DROP CONSTRAINT [FK_ContactVendor];
 GO
-IF OBJECT_ID(N'[dbo].[FK_RFQPart]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[RFQs] DROP CONSTRAINT [FK_RFQPart];
-GO
 IF OBJECT_ID(N'[dbo].[FK_POPart]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[POes] DROP CONSTRAINT [FK_POPart];
 GO
@@ -35,11 +32,8 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_ContactCustommer]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Customers] DROP CONSTRAINT [FK_ContactCustommer];
 GO
-IF OBJECT_ID(N'[dbo].[FK_POCustomer]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[POes] DROP CONSTRAINT [FK_POCustomer];
-GO
-IF OBJECT_ID(N'[dbo].[FK_RFQCustomer]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[RFQs] DROP CONSTRAINT [FK_RFQCustomer];
+IF OBJECT_ID(N'[dbo].[FK_PartRFQ]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[RFQs] DROP CONSTRAINT [FK_PartRFQ];
 GO
 
 -- --------------------------------------------------
@@ -129,10 +123,10 @@ CREATE TABLE [dbo].[RFQs] (
     [YourRef] nvarchar(max)  NULL,
     [Qty] smallint  NOT NULL,
     [NeedBy] datetime  NULL,
-    [Comment] nvarchar(max)  NOT NULL,
+    [Comment] nvarchar(max)  NULL,
     [PriorityId] int  NOT NULL,
-    [Customer_Id] int  NOT NULL,
-    [Part_Id] int  NOT NULL
+    [PartId] int  NOT NULL,
+    [CustomerId] int  NOT NULL
 );
 GO
 
@@ -144,7 +138,7 @@ CREATE TABLE [dbo].[POes] (
     [Qty] smallint  NOT NULL,
     [DeliveryDate] datetime  NOT NULL,
     [Comment] nvarchar(max)  NOT NULL,
-    [Customer_Id] int  NOT NULL,
+    [CustomerId] int  NOT NULL,
     [Part_Id] int  NOT NULL
 );
 GO
@@ -235,20 +229,6 @@ ON [dbo].[Vendors]
     ([ContactId]);
 GO
 
--- Creating foreign key on [Part_Id] in table 'RFQs'
-ALTER TABLE [dbo].[RFQs]
-ADD CONSTRAINT [FK_RFQPart]
-    FOREIGN KEY ([Part_Id])
-    REFERENCES [dbo].[Parts]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_RFQPart'
-CREATE INDEX [IX_FK_RFQPart]
-ON [dbo].[RFQs]
-    ([Part_Id]);
-GO
-
 -- Creating foreign key on [Part_Id] in table 'POes'
 ALTER TABLE [dbo].[POes]
 ADD CONSTRAINT [FK_POPart]
@@ -291,32 +271,46 @@ ON [dbo].[Customers]
     ([ContactId]);
 GO
 
--- Creating foreign key on [Customer_Id] in table 'POes'
-ALTER TABLE [dbo].[POes]
-ADD CONSTRAINT [FK_POCustomer]
-    FOREIGN KEY ([Customer_Id])
-    REFERENCES [dbo].[Customers]
+-- Creating foreign key on [PartId] in table 'RFQs'
+ALTER TABLE [dbo].[RFQs]
+ADD CONSTRAINT [FK_PartRFQ]
+    FOREIGN KEY ([PartId])
+    REFERENCES [dbo].[Parts]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- Creating non-clustered index for FOREIGN KEY 'FK_POCustomer'
-CREATE INDEX [IX_FK_POCustomer]
-ON [dbo].[POes]
-    ([Customer_Id]);
+-- Creating non-clustered index for FOREIGN KEY 'FK_PartRFQ'
+CREATE INDEX [IX_FK_PartRFQ]
+ON [dbo].[RFQs]
+    ([PartId]);
 GO
 
--- Creating foreign key on [Customer_Id] in table 'RFQs'
+-- Creating foreign key on [CustomerId] in table 'RFQs'
 ALTER TABLE [dbo].[RFQs]
-ADD CONSTRAINT [FK_RFQCustomer]
-    FOREIGN KEY ([Customer_Id])
+ADD CONSTRAINT [FK_CustomerRFQ]
+    FOREIGN KEY ([CustomerId])
     REFERENCES [dbo].[Customers]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- Creating non-clustered index for FOREIGN KEY 'FK_RFQCustomer'
-CREATE INDEX [IX_FK_RFQCustomer]
+-- Creating non-clustered index for FOREIGN KEY 'FK_CustomerRFQ'
+CREATE INDEX [IX_FK_CustomerRFQ]
 ON [dbo].[RFQs]
-    ([Customer_Id]);
+    ([CustomerId]);
+GO
+
+-- Creating foreign key on [CustomerId] in table 'POes'
+ALTER TABLE [dbo].[POes]
+ADD CONSTRAINT [FK_CustomerPO]
+    FOREIGN KEY ([CustomerId])
+    REFERENCES [dbo].[Customers]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CustomerPO'
+CREATE INDEX [IX_FK_CustomerPO]
+ON [dbo].[POes]
+    ([CustomerId]);
 GO
 
 -- --------------------------------------------------

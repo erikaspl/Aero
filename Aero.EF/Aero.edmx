@@ -21,10 +21,6 @@
       <End Role="Contact" EntitySet="Contacts" />
       <End Role="Vendor" EntitySet="Vendors" />
     </AssociationSet>
-    <AssociationSet Name="RFQPart" Association="Aero.Store.RFQPart">
-      <End Role="RFQ" EntitySet="RFQs" />
-      <End Role="Part" EntitySet="Parts" />
-    </AssociationSet>
     <AssociationSet Name="POPart" Association="Aero.Store.POPart">
       <End Role="PO" EntitySet="POes" />
       <End Role="Part" EntitySet="Parts" />
@@ -37,13 +33,17 @@
       <End Role="Contact" EntitySet="Contacts" />
       <End Role="Customer" EntitySet="Customers" />
     </AssociationSet>
-    <AssociationSet Name="FK_POCustomer" Association="Aero.Store.FK_POCustomer">
-      <End Role="Customer" EntitySet="Customers" />
-      <End Role="PO" EntitySet="POes" />
+    <AssociationSet Name="PartRFQ" Association="Aero.Store.PartRFQ">
+      <End Role="Part" EntitySet="Parts" />
+      <End Role="RFQ" EntitySet="RFQs" />
     </AssociationSet>
-    <AssociationSet Name="FK_RFQCustomer" Association="Aero.Store.FK_RFQCustomer">
+    <AssociationSet Name="CustomerRFQ" Association="Aero.Store.CustomerRFQ">
       <End Role="Customer" EntitySet="Customers" />
       <End Role="RFQ" EntitySet="RFQs" />
+    </AssociationSet>
+    <AssociationSet Name="CustomerPO" Association="Aero.Store.CustomerPO">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="PO" EntitySet="POes" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Vendors">
@@ -105,10 +105,10 @@
     <Property Name="YourRef" Type="nvarchar(max)" Nullable="true" />
     <Property Name="Qty" Type="smallint" Nullable="false" DefaultValue="1" />
     <Property Name="NeedBy" Type="datetime" Nullable="true" />
-    <Property Name="Comment" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Comment" Type="nvarchar(max)" Nullable="true" />
     <Property Name="PriorityId" Type="int" Nullable="false" />
-    <Property Name="Customer_Id" Type="int" Nullable="false" />
-    <Property Name="Part_Id" Type="int" Nullable="false" />
+    <Property Name="PartId" Type="int" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="POes">
     <Key>
@@ -120,7 +120,7 @@
     <Property Name="Qty" Type="smallint" Nullable="false" />
     <Property Name="DeliveryDate" Type="datetime" Nullable="false" />
     <Property Name="Comment" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Customer_Id" Type="int" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
     <Property Name="Part_Id" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Priorities">
@@ -152,18 +152,6 @@
       </Principal>
       <Dependent Role="Vendor">
         <PropertyRef Name="ContactId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="RFQPart">
-    <End Role="RFQ" Type="Aero.Store.RFQs" Multiplicity="*" />
-    <End Role="Part" Type="Aero.Store.Parts" Multiplicity="1" />
-    <ReferentialConstraint>
-      <Principal Role="Part">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="RFQ">
-        <PropertyRef Name="Part_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -203,19 +191,19 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_POCustomer">
-    <End Role="Customer" Type="Aero.Store.Customers" Multiplicity="1" />
-    <End Role="PO" Type="Aero.Store.POes" Multiplicity="*" />
+  <Association Name="PartRFQ">
+    <End Role="Part" Type="Aero.Store.Parts" Multiplicity="1" />
+    <End Role="RFQ" Type="Aero.Store.RFQs" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="Customer">
+      <Principal Role="Part">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="PO">
-        <PropertyRef Name="Customer_Id" />
+      <Dependent Role="RFQ">
+        <PropertyRef Name="PartId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_RFQCustomer">
+  <Association Name="CustomerRFQ">
     <End Role="Customer" Type="Aero.Store.Customers" Multiplicity="1" />
     <End Role="RFQ" Type="Aero.Store.RFQs" Multiplicity="*" />
     <ReferentialConstraint>
@@ -223,7 +211,19 @@
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="RFQ">
-        <PropertyRef Name="Customer_Id" />
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CustomerPO">
+    <End Role="Customer" Type="Aero.Store.Customers" Multiplicity="1" />
+    <End Role="PO" Type="Aero.Store.POes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PO">
+        <PropertyRef Name="CustomerId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -245,14 +245,10 @@
             <End Role="Vendor" EntitySet="Vendors" />
           </AssociationSet>
           <EntitySet Name="RFQs" EntityType="Aero.RFQ" />
-          <AssociationSet Name="RFQPart" Association="Aero.RFQPart">
-            <End Role="RFQ" EntitySet="RFQs" />
-            <End Role="Part" EntitySet="Parts" />
-          </AssociationSet>
           <EntitySet Name="POes" EntityType="Aero.PO" />
           <AssociationSet Name="POPart" Association="Aero.POPart">
-            <End Role="PO" EntitySet="POes" />
-            <End Role="Part" EntitySet="Parts" />
+            <End EntitySet="POes" Role="PO" />
+            <End EntitySet="Parts" Role="Part" />
           </AssociationSet>
           <EntitySet Name="Priorities" EntityType="Aero.Priority" />
           <AssociationSet Name="PriorityRFQ" Association="Aero.PriorityRFQ">
@@ -263,13 +259,17 @@
             <End Role="Contact" EntitySet="Contacts" />
             <End Role="Customer" EntitySet="Customers" />
           </AssociationSet>
-          <AssociationSet Name="FK_POCustomer" Association="Aero.FK_POCustomer">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="PO" EntitySet="POes" />
+          <AssociationSet Name="PartRFQ" Association="Aero.PartRFQ">
+            <End Role="Part" EntitySet="Parts" />
+            <End Role="RFQ" EntitySet="RFQs" />
           </AssociationSet>
-          <AssociationSet Name="FK_RFQCustomer" Association="Aero.FK_RFQCustomer">
+          <AssociationSet Name="CustomerRFQ" Association="Aero.CustomerRFQ">
             <End Role="Customer" EntitySet="Customers" />
             <End Role="RFQ" EntitySet="RFQs" />
+          </AssociationSet>
+          <AssociationSet Name="CustomerPO" Association="Aero.CustomerPO">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="PO" EntitySet="POes" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Vendor">
@@ -322,8 +322,8 @@
           <Property Type="String" Name="Model" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="Vendor" Relationship="Aero.VendorPart" FromRole="Part" ToRole="Vendor" />
           <Property Type="Int32" Name="VendorId" Nullable="false" />
-          <NavigationProperty Name="RFQs" Relationship="Aero.RFQPart" FromRole="Part" ToRole="RFQ" />
           <NavigationProperty Name="POes" Relationship="Aero.POPart" FromRole="Part" ToRole="PO" />
+          <NavigationProperty Name="RFQs" Relationship="Aero.PartRFQ" FromRole="Part" ToRole="RFQ" />
         </EntityType>
         <EnumType Name="Condition">
           <Member Name="New" />
@@ -349,9 +349,9 @@
           <Property Type="Int32" Name="ContactId" Nullable="true" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="Contact" Relationship="Aero.FK_ContactCustommer" FromRole="Customer" ToRole="Contact" />
-          <NavigationProperty Name="POes" Relationship="Aero.FK_POCustomer" FromRole="Customer" ToRole="PO" />
-          <NavigationProperty Name="RFQs" Relationship="Aero.FK_RFQCustomer" FromRole="Customer" ToRole="RFQ" />
           <Property Type="String" Name="UserName" Nullable="false" FixedLength="false" MaxLength="Max" Unicode="true" />
+          <NavigationProperty Name="RFQs" Relationship="Aero.CustomerRFQ" FromRole="Customer" ToRole="RFQ" />
+          <NavigationProperty Name="POes" Relationship="Aero.CustomerPO" FromRole="Customer" ToRole="PO" />
         </EntityType>
         <Association Name="ContactVendor">
           <End Type="Aero.Contact" Role="Contact" Multiplicity="1" />
@@ -370,20 +370,17 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Part" Relationship="Aero.RFQPart" FromRole="RFQ" ToRole="Part" />
           <Property Type="String" Name="YourRef" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Type="Int16" Name="Qty" Nullable="false" DefaultValue="1" />
           <Property Type="DateTime" Name="NeedBy" Nullable="true" Precision="3" />
-          <Property Type="String" Name="Comment" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="Comment" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="Priority" Relationship="Aero.PriorityRFQ" FromRole="RFQ" ToRole="Priority" />
           <Property Type="Int32" Name="PriorityId" Nullable="false" />
-          <Property Type="Int32" Name="Customer_Id" Nullable="false" />
-          <NavigationProperty Name="Customer" Relationship="Aero.FK_RFQCustomer" FromRole="RFQ" ToRole="Customer" />
+          <NavigationProperty Name="Part" Relationship="Aero.PartRFQ" FromRole="RFQ" ToRole="Part" />
+          <Property Type="Int32" Name="PartId" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="Aero.CustomerRFQ" FromRole="RFQ" ToRole="Customer" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
           </EntityType>
-        <Association Name="RFQPart">
-          <End Type="Aero.RFQ" Role="RFQ" Multiplicity="*" />
-          <End Type="Aero.Part" Role="Part" Multiplicity="1" />
-        </Association>
         <EntityType Name="PO">
           <Key>
             <PropertyRef Name="Id" />
@@ -395,12 +392,12 @@
           <Property Type="Int16" Name="Qty" Nullable="false" />
           <Property Type="DateTime" Name="DeliveryDate" Nullable="false" Precision="3" />
           <Property Type="String" Name="Comment" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Type="Int32" Name="Customer_Id" Nullable="false" />
-          <NavigationProperty Name="Customer" Relationship="Aero.FK_POCustomer" FromRole="PO" ToRole="Customer" />
+          <NavigationProperty Name="Customer" Relationship="Aero.CustomerPO" FromRole="PO" ToRole="Customer" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
           </EntityType>
         <Association Name="POPart">
-          <End Type="Aero.PO" Role="PO" Multiplicity="*" />
-          <End Type="Aero.Part" Role="Part" Multiplicity="1" />
+          <End Type="Aero.PO" Multiplicity="*" Role="PO" />
+          <End Type="Aero.Part" Multiplicity="1" Role="Part" />
         </Association>
         <EntityType Name="Priority">
           <Key>
@@ -435,19 +432,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_POCustomer">
-          <End Type="Aero.Customer" Role="Customer" Multiplicity="1" />
-          <End Type="Aero.PO" Role="PO" Multiplicity="*" />
+        <Association Name="PartRFQ">
+          <End Type="Aero.Part" Role="Part" Multiplicity="1" />
+          <End Type="Aero.RFQ" Role="RFQ" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Customer">
+            <Principal Role="Part">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="PO">
-              <PropertyRef Name="Customer_Id" />
+            <Dependent Role="RFQ">
+              <PropertyRef Name="PartId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RFQCustomer">
+        <Association Name="CustomerRFQ">
           <End Type="Aero.Customer" Role="Customer" Multiplicity="1" />
           <End Type="Aero.RFQ" Role="RFQ" Multiplicity="*" />
           <ReferentialConstraint>
@@ -455,7 +452,19 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="RFQ">
-              <PropertyRef Name="Customer_Id" />
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CustomerPO">
+          <End Type="Aero.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="Aero.PO" Role="PO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PO">
+              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -529,7 +538,8 @@
           <ScalarProperty Name="NeedBy" ColumnName="NeedBy" />
           <ScalarProperty Name="Comment" ColumnName="Comment" />
           <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
-          <ScalarProperty Name="Customer_Id" ColumnName="Customer_Id" />
+          <ScalarProperty Name="PartId" ColumnName="PartId" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -542,7 +552,7 @@
           <ScalarProperty Name="Qty" ColumnName="Qty" />
           <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
           <ScalarProperty Name="Comment" ColumnName="Comment" />
-          <ScalarProperty Name="Customer_Id" ColumnName="Customer_Id" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -555,14 +565,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <AssociationSetMapping Name="RFQPart" TypeName="Aero.RFQPart" StoreEntitySet="RFQs">
-      <EndProperty Name="Part">
-        <ScalarProperty Name="Id" ColumnName="Part_Id" />
-      </EndProperty>
-      <EndProperty Name="RFQ">
-        <ScalarProperty Name="Id" ColumnName="Id" />
-      </EndProperty>
-    </AssociationSetMapping>
     <AssociationSetMapping Name="POPart" TypeName="Aero.POPart" StoreEntitySet="POes">
       <EndProperty Name="Part">
         <ScalarProperty Name="Id" ColumnName="Part_Id" />

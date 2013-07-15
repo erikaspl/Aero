@@ -124,7 +124,7 @@ namespace Aero.AcceptanceTests
             var aogPriority = TestData.CreatePriority("AOG", "AOG");
             var routinePriority = TestData.CreatePriority("Routine", "Routine");
             var highPriority = TestData.CreatePriority("High", "High");
-            //var priorities = List<Priority>(){routinePriority, highPriority, routinePriority};
+            var priorities = new List<Priority>() { aogPriority, highPriority, routinePriority };
 
             using (AeroContainer _context = new AeroContainer())
             {
@@ -143,6 +143,12 @@ namespace Aero.AcceptanceTests
                 foreach (var part in parts)
                 {
                     _context.Parts.Add(part);
+                }
+                _context.SaveChanges();
+
+                foreach(var priority in priorities)
+                {
+                    _context.Priorities.Add(priority);
                 }
                 _context.SaveChanges();
             }

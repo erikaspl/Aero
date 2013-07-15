@@ -1,4 +1,5 @@
 using System.Web.Http;
+using System.Web.Http.OData.Batch;
 using System.Web.Http.OData.Builder;
 using Aero.Model;
 using Microsoft.Data.Edm;
@@ -21,8 +22,13 @@ namespace Aero.Angular.App_Start {
       }
 
       public static void Register(HttpConfiguration config)
-      {
-          config.Routes.MapODataRoute("Aero", "odata", GetImplicitEdm());
+      {          
+          config.Routes.MapODataRoute(
+              routeName: "Aero",
+              routePrefix: "odata",
+              model: GetImplicitEdm(),
+              batchHandler:  new DefaultODataBatchHandler(GlobalConfiguration.DefaultServer));
+
           config.Routes.MapHttpRoute(
             name: "BreezeApi",
             routeTemplate: "api/{controller}/{action}"

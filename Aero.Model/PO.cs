@@ -20,7 +20,7 @@ namespace Aero.Model
         public short Qty { get; set; }
         public System.DateTime DeliveryDate { get; set; }
         public string Comment { get; set; }
-        public int Customer_Id { get; set; }
+        public int CustomerId { get; set; }
     
         public virtual Part Part { get; set; }
         public virtual Customer Customer { get; set; }

@@ -25,10 +25,11 @@ namespace Aero.Model
         public Nullable<System.DateTime> NeedBy { get; set; }
         public string Comment { get; set; }
         public int PriorityId { get; set; }
-        public int Customer_Id { get; set; }
+        public int PartId { get; set; }
+        public int CustomerId { get; set; }
     
-        public virtual Part Part { get; set; }
         public virtual Priority Priority { get; set; }
+        public virtual Part Part { get; set; }
         public virtual Customer Customer { get; set; }
     }
 }

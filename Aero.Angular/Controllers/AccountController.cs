@@ -113,7 +113,7 @@ namespace Aero.Angular.Controllers
         {
             AeroContainer _context = new AeroContainer();
 
-            var customer = _context.Customers.First(c => c.UserName == userName);
+            var customer = _context.Customers.FirstOrDefault(c => c.UserName == userName);
             if (customer == null)
             {
                 customer = new Customer

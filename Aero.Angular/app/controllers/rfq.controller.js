@@ -25,8 +25,14 @@
 
         $scope.submitRfq = function () {
             var customerId = AeroStore.getCustomer()
-                .then(function(customerId){
-                    console.log('submitRfq for customer ' + customerId);
+                .then(function (customerId) {
+                    $scope.rfq.customerId = customerId;
+                    $scope.rfq.partId = $scope.part.id;
+                    datacontext.saveEntity($scope.rfq)
+                        .then(function(){
+                            $scope.close();
+                        });
+                    //console.log('submitRfq for customer ' + customerId);
                 });            
         };
 

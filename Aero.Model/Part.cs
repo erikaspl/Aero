@@ -17,8 +17,8 @@ namespace Aero.Model
         public Part()
         {
             this.Qty = 0;
-            this.RFQs = new HashSet<RFQ>();
             this.POes = new HashSet<PO>();
+            this.RFQs = new HashSet<RFQ>();
         }
     
         public int Id { get; set; }
@@ -34,7 +34,7 @@ namespace Aero.Model
         public int VendorId { get; set; }
     
         public virtual Vendor Vendor { get; set; }
-        public virtual ICollection<RFQ> RFQs { get; set; }
         public virtual ICollection<PO> POes { get; set; }
+        public virtual ICollection<RFQ> RFQs { get; set; }
     }
 }
