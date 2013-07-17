@@ -2,28 +2,32 @@
     <span class="centered">
         <h4>{{part.partNumber}}</h4>
     </span>
-    <table class="table" style="background-color: white">
-        <tr>
-            <td>Model:</td>
-            <td>{{part.model}}</td>
+    <table class="table rfq-table" style="background-color: white">
+        <tr>            
+            <td class="rfq-empty-cell"></td>
+            <td class="rfq-info-cell">Model:</td>
+            <td class="rfq-content-cell">{{part.model}}</td>
         </tr>
-        <tr>
+<!--        <tr>
             <td>Description:</td>
             <td>{{part.description}}</td>
-        </tr>
+        </tr>-->
         <tr>
-            <td>Condition:</td>
-            <td>{{part.condition}}</td>
+            <td class="rfq-empty-cell"></td>
+            <td class="rfq-info-cell">Condition:</td>
+            <td class="rfq-content-cell">{{part.condition}}</td>
         </tr>        
         <tr>
-            <td><small>Quantity:</small></td>
-            <td>
+            <td class="rfq-empty-cell"></td>
+            <td class="rfq-info-cell">Quantity:</td>
+            <td class="rfq-content-cell">
                 <select class="span1" ng-model="rfq.qty" ng-options="value as value for (key, value) in quantities" data-style="btn-primary" bs-select></select>
             </td>
         </tr>
         <tr>
-            <td><small>Need by:</small></td>
-            <td>
+            <td class="rfq-empty-cell"></td>
+            <td class="rfq-info-cell">Need by:</td>
+            <td class="rfq-content-cell">
                 <div class="control-group input-append">
                     <input type="text" class="input-small" ng-model="rfq.needBy" data-date-format="dd/mm/yyyy" bs-datepicker>
                     <button type="button" class="btn" data-toggle="datepicker"><i class="icon-calendar"></i></button>
@@ -31,15 +35,17 @@
             </td>
         </tr>
         <tr>
-            <td><small>Priority:</small></td>
-            <td>
-                <select class="span2" ng-model="rfq.priorityId" ng-options="value.id as value.code for (key, value) in priorities" data-style="btn-primary" bs-select></select>
+            <td class="rfq-empty-cell"></td>
+            <td class="rfq-info-cell">Priority:</td>
+            <td class="rfq-content-cell">
+                <select class="span3" ng-model="rfq.priorityId" ng-options="value.id as value.code for (key, value) in priorities" data-style="btn-primary" bs-select></select>
             </td>
         </tr>
         <tr>
-            <td><small>Comment:</small></td>
-            <td>
-                <textarea class="span2 non-resizable" rows="3" ng-model="rfq.comment"></textarea>
+            <td class="rfq-empty-cell"></td>
+            <td class="rfq-info-cell">Comment:</td>
+            <td class="rfq-content-cell">
+                <textarea class="span3 non-resizable" rows="3" ng-model="rfq.comment"></textarea>
             </td>
         </tr>
     </table>    

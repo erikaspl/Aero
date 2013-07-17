@@ -27,3 +27,25 @@
 .non-resizable{
     resize: none;
 }
+
+.rfq-table{
+    margin-bottom: 0px;
+}
+
+.rfq-modal{
+    width: 400px;
+}
+
+.rfq-empty-cell{
+    width: 15%; 
+}
+
+.rfq-info-cell{
+    width: 30%; 
+    text-align: right;
+    font-weight:bold;
+}
+
+.rfq-content-cell{
+    width: 55%; 
+}

@@ -1,6 +1,6 @@
 ﻿aero.controller('RfqCtrl',
-    ['$scope', '$location', 'amplify', 'breeze', 'datacontext', 'logger', 'AeroStore',
-    function ($scope, $location, amplify, breeze, datacontext, logger, AeroStore) {
+    ['$scope', '$location', 'amplify', 'breeze', 'datacontext', 'logger', 'toastr', 'AeroStore',
+    function ($scope, $location, amplify, breeze, datacontext, logger, toastr, AeroStore) {
 
         logger.log("creating RfqCtrl");
         $scope.partId = amplify.store('selectedPartId');
@@ -25,14 +25,15 @@
 
         $scope.submitRfq = function () {
             var customerId = AeroStore.getCustomer()
-                .then(function (customerId) {
+                .done(function (customerId) {
                     $scope.rfq.customerId = customerId;
                     $scope.rfq.partId = $scope.part.id;
                     datacontext.saveEntity($scope.rfq)
-                        .then(function(){
-                            $scope.close();
+                        .done(function (message) {
+                            $scope.close();                            
+                            finish();
+                            toastr.success("your request for qutation successfully saved.");
                         });
-                    //console.log('submitRfq for customer ' + customerId);
                 });            
         };
 

@@ -181,14 +181,19 @@ aero.factory('datacontext',
         }
 
         function saveEntity(masterEntity) {
+            var defer = Q.defer();
             // if nothing to save, return a resolved promise
-            if (!manager.hasChanges()) { return Q(); }
+            if (!manager.hasChanges()) {
+                return defer.resolve();
+            }
 
             var description = describeSaveOperation(masterEntity);
             return manager.saveChanges().then(saveSucceeded).fail(saveFailed);
 
             function saveSucceeded() {
-                logger.log("saved " + description);
+                var successMsg = "saved " + description;
+                logger.log(successMsg);
+                return defer.resolve(successMsg);
             }
 
             function saveFailed(error) {
@@ -200,8 +205,10 @@ aero.factory('datacontext',
                 logger.log(msg, 'error');
                 // Let user see invalid value briefly before reverting
                 $timeout(function () { manager.rejectChanges(); }, 1000);
-                throw error; // so caller can see failure
+                throw error;
             }
+
+            return defer.promise();
         }
         function describeSaveOperation(entity) {
             var statename = entity.entityAspect.entityState.name.toLowerCase();

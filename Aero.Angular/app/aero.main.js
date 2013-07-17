@@ -11,7 +11,8 @@ aero.value('breeze', window.breeze)
     .value('Q', window.Q)
     .value('_', window._)
     .value('amplify', window.amplify)
-    .value('moment', window.moment);
+    .value('moment', window.moment)
+    .value('toastr', window.toastr);
 
 // Configure routes
 aero.config(['$routeProvider', '$locationProvider', '$httpProvider', function ($routeProvider, $locationProvider, $httpProvider) {

@@ -31,7 +31,7 @@ aero.factory('model', ['$rootScope', function ($rootScope) {
         d.setHours(0, 0, 0, 0);
         rfq.needBy = d;
         rfq.qty = 1;
-        rfq.priority = 1;
+        rfq.priorityId = 1;
     }
 
     function todoListInitializer(todoList) {

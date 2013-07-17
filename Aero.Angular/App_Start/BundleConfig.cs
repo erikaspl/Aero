@@ -22,7 +22,8 @@ namespace Aero.Angular
                 "~/Scripts/q.js",
                 "~/Scripts/amplify.js",
                 "~/Scripts/underscore.js",
-                "~/Scripts/moment.js"));
+                "~/Scripts/moment.js",
+                "~/Scripts/toastr.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
                         "~/Scripts/angular.js",
@@ -40,7 +41,7 @@ namespace Aero.Angular
                         "~/Scripts/breeze.debug.js",
                         "~/Scripts/breeze.min.js",
                         "~/Scripts/breeze.savequeuing.js",
-                        "~/Scripts/datajs-{version}.js"));
+                        "~/Scripts/datajs-1.1.1beta2.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap",
                                         "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js")
@@ -75,13 +76,14 @@ namespace Aero.Angular
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/Site.css",
                 "~/Content/TodoList.css",
-                "~/Content/Aero.css",
                 "~/Content/bootstrap.css",
                 "~/Content/bootstrap-responsive.css",
                 "~/Content/bootstrap-datepicker.css",
                 "~/Content/bootstrap-select.css",
                 "~/Content/ng-grid.css",
-                "~/Content/fade-in-right.css"));
+                "~/Content/fade-in-right.css",
+                "~/Content/toastr.css",
+                "~/Content/Aero.css"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                         "~/Content/themes/base/jquery.ui.core.css",
