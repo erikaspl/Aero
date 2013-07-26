@@ -109,8 +109,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AeroControllerTests.cs" />
     <Compile Include="ContactTests.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
+    <Compile Include="JsonContent.cs" />
     <Compile Include="PriorityTests.cs" />
     <Compile Include="CustomerTests.cs" />
     <Compile Include="DataGenerationTests.cs" />
@@ -150,6 +152,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Aero.Angular\Aero.Angular.csproj">
+      <Project>{e7291494-44eb-4078-98c1-5ced9b1fa1c6}</Project>
+      <Name>Aero.Angular</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Aero.Controllers\Aero.Controllers.csproj">
       <Project>{ef626037-1b2b-4d10-878e-9c2b9ba5486e}</Project>
       <Name>Aero.Controllers</Name>
@@ -161,10 +167,6 @@
     <ProjectReference Include="..\Aero.Model\Aero.Model.csproj">
       <Project>{3d94cf54-5a62-4b2c-b6d6-bb186b496a3b}</Project>
       <Name>Aero.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Aero\Aero.csproj">
-      <Project>{348de64e-6dd8-42f1-a86d-119fa5451cf5}</Project>
-      <Name>Aero</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -101,6 +101,9 @@
     <Compile Include="RFQ.cs">
       <DependentUpon>Aero.tt</DependentUpon>
     </Compile>
+    <Compile Include="RFQState.cs">
+      <DependentUpon>Aero.tt</DependentUpon>
+    </Compile>
     <Compile Include="Vendor.cs">
       <DependentUpon>Aero.tt</DependentUpon>
     </Compile>

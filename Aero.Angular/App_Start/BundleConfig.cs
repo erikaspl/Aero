@@ -60,6 +60,7 @@ namespace Aero.Angular
                 "~/app/controllers/about.controller.js",
                 "~/app/controllers/search.controller.js",
                 "~/app/controllers/rfq.controller.js",
+                "~/app/controllers/my.rfq.controller.js",
                 "~/app/directives/fade-in-right.js",
                 "~/app/directives/part-summary.js",
                 "~/app/directives/datepicker.js",

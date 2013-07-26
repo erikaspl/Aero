@@ -1,7 +1,8 @@
 ﻿'use strict';
 
 aero.factory('AeroStore', ['amplify', '$cookies', 'datacontext', function (amplify, $cookies, datacontext) {
-	var customerIdTag = 'customerId';
+    var customerIdTag = 'customerId';
+    var selectedPartTag = 'selectedPartId';
 	var aeroStore = {
 		
 		setCustomer: function (customerId) {
@@ -24,8 +25,19 @@ aero.factory('AeroStore', ['amplify', '$cookies', 'datacontext', function (ampli
 			}
 
 			return defer.promise;
+		},
+
+
+		selectPart: function (partId) {
+		    amplify.store(selectedPartTag, partId);
+		},
+
+		getSelectedPart: function () {
+		    return amplify.store(selectedPartTag);
 		}
 	}
+
+
 
 	return aeroStore;
 }]);

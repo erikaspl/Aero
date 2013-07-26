@@ -24,7 +24,7 @@ aero.factory('datacontext',
             }
         });
 
-        var manager = new breeze.EntityManager("/odata/");
+        var manager = new breeze.EntityManager("/api/Aero");
         manager.enableSaveQueuing(true);
 
         var datacontext = {
@@ -32,6 +32,7 @@ aero.factory('datacontext',
             searchParts: searchParts,
             loadPart: loadPart,
             loadRfqPriorities: loadRfqPriorities,
+            loadMyRfq: loadMyRfq,
             fetchMetadata: fetchMetadata,
             getCustomerByUserName: getCustomerByUserName,
             createEntity: createEntity,
@@ -58,10 +59,12 @@ aero.factory('datacontext',
         }
 
         function loadPart(partId) {
-            var query = new breeze.EntityQuery("Parts(" + partId + ")")
-                //.using(jsonResultsAdapter);
+            var query = breeze.EntityQuery
+                .from("Parts")
+                .where("id", "==", partId);
+
             return manager.executeQuery(query)
-                .then(getSucceededSingleRez);
+                .then(getSucceededSingleRez); 
         }
 
         function loadRfqPriorities(forceRefresh) {
@@ -79,6 +82,23 @@ aero.factory('datacontext',
                     return data;
                 }); // caller to handle failure
         }
+
+        function loadMyRfq(customerId, takeSize, skipSize) {
+            var query = breeze.EntityQuery
+                .from("RFQs")
+                .where("customerId", "==", customerId)
+                .expand("part")
+                //.orderBy("dateSubmitted")
+                .take(takeSize)
+                .skip(skipSize)
+                .inlineCount();
+
+            return manager.executeQuery(query)
+                .then(function (data) {
+                    return getSucceeded(data);
+                }).done(); // caller to handle failure
+        }
+
 
         //#region private members
 
@@ -236,7 +256,6 @@ aero.factory('datacontext',
 
         function configureBreeze() {
             // configure to use the model library for Angular
-            breeze.config.initializeAdapterInstances({ dataService: "OData" });
             breeze.config.initializeAdapterInstance("modelLibrary", "backingStore", true);
 
             // configure to use camelCase

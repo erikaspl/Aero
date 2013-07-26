@@ -67,7 +67,7 @@ namespace Aero.AcceptanceTests
             };
         }
 
-        internal static RFQ CreateRFQ(string comment, DateTime? needBy, Part part, Priority priority, short qty, string yourRef, Customer customer)
+        internal static RFQ CreateRFQ(string comment, DateTime? needBy, Part part, Priority priority, short qty, string yourRef, DateTime dateSubmitted, Customer customer, RFQState rfqState)
         {
             return new RFQ
             {
@@ -77,7 +77,9 @@ namespace Aero.AcceptanceTests
                 Priority = priority,
                 Qty = qty,
                 YourRef = yourRef,
-                Customer = customer
+                Customer = customer,
+                RFQState = rfqState,
+                DateSubmitted = dateSubmitted
             };
         }
 
@@ -104,6 +106,15 @@ namespace Aero.AcceptanceTests
             };
         }
 
+        internal static RFQState CreateRfqState(string code, string display)
+        {
+            return new RFQState
+            {
+                Code = code,
+                Display = display
+            };
+        }
+
         internal static void GenerateTestData()
         {
             var contacts = Builder<Contact>.CreateListOfSize(50)
@@ -124,7 +135,12 @@ namespace Aero.AcceptanceTests
             var aogPriority = TestData.CreatePriority("AOG", "AOG");
             var routinePriority = TestData.CreatePriority("Routine", "Routine");
             var highPriority = TestData.CreatePriority("High", "High");
-            var priorities = new List<Priority>() { aogPriority, highPriority, routinePriority };
+            var priorities = new List<Priority>() { routinePriority, aogPriority, highPriority };
+
+            var rfqStateOpen = TestData.CreateRfqState("Open", "Open");
+            var rfqStateClosed = TestData.CreateRfqState("Closed", "Closed");
+            var rfqStates = new List<RFQState>() { rfqStateOpen, rfqStateClosed };
+
 
             using (AeroContainer _context = new AeroContainer())
             {
@@ -149,6 +165,12 @@ namespace Aero.AcceptanceTests
                 foreach(var priority in priorities)
                 {
                     _context.Priorities.Add(priority);
+                }
+                _context.SaveChanges();
+
+                foreach (var rfqState in rfqStates)
+                {
+                    _context.RFQStates.Add(rfqState);
                 }
                 _context.SaveChanges();
             }

@@ -13,6 +13,7 @@
     <EntitySet Name="RFQs" EntityType="Aero.Store.RFQs" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="POes" EntityType="Aero.Store.POes" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Priorities" EntityType="Aero.Store.Priorities" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RFQStates" EntityType="Aero.Store.RFQStates" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="VendorPart" Association="Aero.Store.VendorPart">
       <End Role="Vendor" EntitySet="Vendors" />
       <End Role="Part" EntitySet="Parts" />
@@ -44,6 +45,10 @@
     <AssociationSet Name="CustomerPO" Association="Aero.Store.CustomerPO">
       <End Role="Customer" EntitySet="Customers" />
       <End Role="PO" EntitySet="POes" />
+    </AssociationSet>
+    <AssociationSet Name="RFQStateRFQ" Association="Aero.Store.RFQStateRFQ">
+      <End Role="RFQState" EntitySet="RFQStates" />
+      <End Role="RFQ" EntitySet="RFQs" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Vendors">
@@ -109,6 +114,9 @@
     <Property Name="PriorityId" Type="int" Nullable="false" />
     <Property Name="PartId" Type="int" Nullable="false" />
     <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="RFQStateId" Type="int" Nullable="false" />
+    <Property Name="DateSubmitted" Type="datetime" Nullable="false" />
+    <Property Name="DateResolved" Type="datetime" Nullable="true" />
   </EntityType>
   <EntityType Name="POes">
     <Key>
@@ -124,6 +132,14 @@
     <Property Name="Part_Id" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Priorities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Code" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Display" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RFQStates">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
@@ -227,6 +243,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="RFQStateRFQ">
+    <End Role="RFQState" Type="Aero.Store.RFQStates" Multiplicity="1" />
+    <End Role="RFQ" Type="Aero.Store.RFQs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RFQState">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RFQ">
+        <PropertyRef Name="RFQStateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -270,6 +298,11 @@
           <AssociationSet Name="CustomerPO" Association="Aero.CustomerPO">
             <End Role="Customer" EntitySet="Customers" />
             <End Role="PO" EntitySet="POes" />
+          </AssociationSet>
+          <EntitySet Name="RFQStates" EntityType="Aero.RFQState" />
+          <AssociationSet Name="RFQStateRFQ" Association="Aero.RFQStateRFQ">
+            <End Role="RFQState" EntitySet="RFQStates" />
+            <End Role="RFQ" EntitySet="RFQs" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Vendor">
@@ -380,6 +413,10 @@
           <Property Type="Int32" Name="PartId" Nullable="false" />
           <NavigationProperty Name="Customer" Relationship="Aero.CustomerRFQ" FromRole="RFQ" ToRole="Customer" />
           <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <NavigationProperty Name="RFQState" Relationship="Aero.RFQStateRFQ" FromRole="RFQ" ToRole="RFQState" />
+          <Property Type="Int32" Name="RFQStateId" Nullable="false" />
+          <Property Type="DateTime" Name="DateSubmitted" Nullable="false" />
+          <Property Type="DateTime" Name="DateResolved" Nullable="true" />
           </EntityType>
         <EntityType Name="PO">
           <Key>
@@ -468,6 +505,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="RFQState">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Code" Nullable="false" />
+          <Property Type="String" Name="Display" Nullable="false" />
+        </EntityType>
+        <Association Name="RFQStateRFQ">
+          <End Type="Aero.RFQState" Role="RFQState" Multiplicity="1" />
+          <End Type="Aero.RFQ" Role="RFQ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RFQState">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RFQ">
+              <PropertyRef Name="RFQStateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -540,6 +597,9 @@
           <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
           <ScalarProperty Name="PartId" ColumnName="PartId" />
           <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="RFQStateId" ColumnName="RFQStateId" />
+          <ScalarProperty Name="DateSubmitted" ColumnName="DateSubmitted" />
+          <ScalarProperty Name="DateResolved" ColumnName="DateResolved" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -559,6 +619,15 @@
     <EntitySetMapping Name="Priorities">
       <EntityTypeMapping TypeName="IsTypeOf(Aero.Priority)">
         <MappingFragment StoreEntitySet="Priorities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Display" ColumnName="Display" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RFQStates">
+      <EntityTypeMapping TypeName="IsTypeOf(Aero.RFQState)">
+        <MappingFragment StoreEntitySet="RFQStates">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Display" ColumnName="Display" />

@@ -27,9 +27,13 @@ namespace Aero.Model
         public int PriorityId { get; set; }
         public int PartId { get; set; }
         public int CustomerId { get; set; }
+        public int RFQStateId { get; set; }
+        public System.DateTime DateSubmitted { get; set; }
+        public Nullable<System.DateTime> DateResolved { get; set; }
     
         public virtual Priority Priority { get; set; }
         public virtual Part Part { get; set; }
         public virtual Customer Customer { get; set; }
+        public virtual RFQState RFQState { get; set; }
     }
 }

@@ -24,6 +24,7 @@ aero.config(['$routeProvider', '$locationProvider', '$httpProvider', function ($
           when('/about', { templateUrl: 'app/views/about.view.html', controller: 'AboutCtrl' }).
           when('/parts', { templateUrl: 'app/views/search.view.html', controller: 'SearchCtrl' }).
           when('/rfq', { templateUrl: 'app/views/rfq.view.html', controller: 'RfqCtrl' }).
+          when('/myrfq', { templateUrl: 'app/views/my.rfq.view.html', controller: 'MyRfqCtrl' }).
           otherwise({ redirectTo: '/404' });
   }]);
 

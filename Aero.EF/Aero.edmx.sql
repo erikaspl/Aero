@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 07/15/2013 17:11:09
+-- Date Created: 07/18/2013 17:56:11
 -- Generated from EDMX file: C:\Dropbox\dev\Aero\Aero.EF\Aero.edmx
 -- --------------------------------------------------
 
@@ -35,6 +35,15 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_PartRFQ]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[RFQs] DROP CONSTRAINT [FK_PartRFQ];
 GO
+IF OBJECT_ID(N'[dbo].[FK_CustomerRFQ]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[RFQs] DROP CONSTRAINT [FK_CustomerRFQ];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CustomerPO]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[POes] DROP CONSTRAINT [FK_CustomerPO];
+GO
+IF OBJECT_ID(N'[dbo].[FK_RFQStateRFQ]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[RFQs] DROP CONSTRAINT [FK_RFQStateRFQ];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -60,6 +69,9 @@ IF OBJECT_ID(N'[dbo].[POes]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[Priorities]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Priorities];
+GO
+IF OBJECT_ID(N'[dbo].[RFQStates]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[RFQStates];
 GO
 
 -- --------------------------------------------------
@@ -126,7 +138,10 @@ CREATE TABLE [dbo].[RFQs] (
     [Comment] nvarchar(max)  NULL,
     [PriorityId] int  NOT NULL,
     [PartId] int  NOT NULL,
-    [CustomerId] int  NOT NULL
+    [CustomerId] int  NOT NULL,
+    [RFQStateId] int  NOT NULL,
+    [DateSubmitted] datetime  NOT NULL,
+    [DateResolved] datetime  NULL
 );
 GO
 
@@ -145,6 +160,14 @@ GO
 
 -- Creating table 'Priorities'
 CREATE TABLE [dbo].[Priorities] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Code] nvarchar(max)  NOT NULL,
+    [Display] nvarchar(max)  NOT NULL
+);
+GO
+
+-- Creating table 'RFQStates'
+CREATE TABLE [dbo].[RFQStates] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Code] nvarchar(max)  NOT NULL,
     [Display] nvarchar(max)  NOT NULL
@@ -194,6 +217,12 @@ GO
 -- Creating primary key on [Id] in table 'Priorities'
 ALTER TABLE [dbo].[Priorities]
 ADD CONSTRAINT [PK_Priorities]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'RFQStates'
+ALTER TABLE [dbo].[RFQStates]
+ADD CONSTRAINT [PK_RFQStates]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -311,6 +340,20 @@ ADD CONSTRAINT [FK_CustomerPO]
 CREATE INDEX [IX_FK_CustomerPO]
 ON [dbo].[POes]
     ([CustomerId]);
+GO
+
+-- Creating foreign key on [RFQStateId] in table 'RFQs'
+ALTER TABLE [dbo].[RFQs]
+ADD CONSTRAINT [FK_RFQStateRFQ]
+    FOREIGN KEY ([RFQStateId])
+    REFERENCES [dbo].[RFQStates]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_RFQStateRFQ'
+CREATE INDEX [IX_FK_RFQStateRFQ]
+ON [dbo].[RFQs]
+    ([RFQStateId]);
 GO
 
 -- --------------------------------------------------

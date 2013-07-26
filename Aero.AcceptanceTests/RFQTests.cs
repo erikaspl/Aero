@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 using System.Web.Http.SelfHost;
 using Aero.Model;
 using Microsoft.Data.OData;
@@ -33,7 +34,8 @@ namespace Aero.AcceptanceTests
             var aogPriority = TestData.CreatePriority("AOG", "AOG");
             var routinePriority = TestData.CreatePriority("Routine", "Routine");
             var highPriority = TestData.CreatePriority("High", "High");
-            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", customer);
+            var rfqOpenState = TestData.CreateRfqState("Open", "Open");
+            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", new DateTime(2013, 10, 10), customer, rfqOpenState);
 
             using (var client = new HttpClient(_server))
             {
@@ -69,7 +71,8 @@ namespace Aero.AcceptanceTests
             var aogPriority = TestData.CreatePriority("AOG", "AOG");
             var routinePriority = TestData.CreatePriority("Routine", "Routine");
             var highPriority = TestData.CreatePriority("High", "High");
-            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", customer);
+            var rfqOpenState = TestData.CreateRfqState("Open", "Open");
+            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", new DateTime(2013, 10, 10), customer, rfqOpenState);
 
             using (var client = new HttpClient(_server))
             {
@@ -116,7 +119,8 @@ namespace Aero.AcceptanceTests
             var aogPriority = TestData.CreatePriority("AOG", "AOG");
             var routinePriority = TestData.CreatePriority("Routine", "Routine");
             var highPriority = TestData.CreatePriority("High", "High");
-            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", customer);
+            var rfqOpenState = TestData.CreateRfqState("Open", "Open");
+            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", new DateTime(2013, 10, 10), customer, rfqOpenState);
 
             using (var client = new HttpClient(_server))
             {
@@ -154,7 +158,8 @@ namespace Aero.AcceptanceTests
             var aogPriority = TestData.CreatePriority("AOG", "AOG");
             var routinePriority = TestData.CreatePriority("Routine", "Routine");
             var highPriority = TestData.CreatePriority("High", "High");
-            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", customer);
+            var rfqOpenState = TestData.CreateRfqState("Open", "Open");
+            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", new DateTime(2013, 10, 10), customer, rfqOpenState);
 
             using (var client = new HttpClient(_server))
             {
@@ -184,7 +189,8 @@ namespace Aero.AcceptanceTests
             var aogPriority = TestData.CreatePriority("AOG", "AOG");
             var routinePriority = TestData.CreatePriority("Routine", "Routine");
             var highPriority = TestData.CreatePriority("High", "High");
-            var rfq = TestData.CreateRFQ(null, new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", customer);
+            var rfqOpenState = TestData.CreateRfqState("Open", "Open");
+            var rfq = TestData.CreateRFQ(null, new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", new DateTime(2013, 10, 10), customer, null);
 
             using (var client = new HttpClient(_server))
             {
@@ -192,7 +198,7 @@ namespace Aero.AcceptanceTests
                 var requestMessage = HttpSelfHost.CreateHttpRequestMessage<RFQ>(rfq);
                 var response = client.PostAsync("odata/RFQ", requestMessage);
                 Assert.Equal(response.Result.StatusCode, HttpStatusCode.InternalServerError);
-                Assert.IsType<ObjectContent<ODataError>>(response.Result.Content);
+                Assert.IsType<ObjectContent<HttpError>>(response.Result.Content);
             }
         }
 
@@ -209,7 +215,8 @@ namespace Aero.AcceptanceTests
             var aogPriority = TestData.CreatePriority("AOG", "AOG");
             var routinePriority = TestData.CreatePriority("Routine", "Routine");
             var highPriority = TestData.CreatePriority("High", "High");
-            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", customer);
+            var rfqOpenState = TestData.CreateRfqState("Open", "Open");
+            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", new DateTime(2013, 10, 10), customer, rfqOpenState);
 
             using (var client = new HttpClient(_server))
             {
@@ -218,12 +225,11 @@ namespace Aero.AcceptanceTests
                 var response = client.PostAsync("odata/RFQ", requestMessage);
                 RFQ rfqResponse = (RFQ)((ObjectContent)(response.Result.Content)).Value;
 
-                rfqResponse.Comment = null;
+                rfqResponse.NeedBy = null;
 
                 var requestMessage2 = HttpSelfHost.CreateHttpRequestMessage<RFQ>(rfqResponse);
                 var response2 = client.PutAsync(string.Format("odata/RFQ({0})", rfqResponse.Id), requestMessage2);
-                Assert.Equal(response2.Result.StatusCode, HttpStatusCode.InternalServerError);
-                Assert.IsType<ObjectContent<ODataError>>(response2.Result.Content);
+                Assert.Equal(response2.Result.StatusCode, HttpStatusCode.NoContent);
             }
         }
 
@@ -240,7 +246,8 @@ namespace Aero.AcceptanceTests
             var aogPriority = TestData.CreatePriority("AOG", "AOG");
             var routinePriority = TestData.CreatePriority("Routine", "Routine");
             var highPriority = TestData.CreatePriority("High", "High");
-            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", customer);
+            var rfqOpenState = TestData.CreateRfqState("Open", "Open");
+            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", new DateTime(2013, 10, 10), customer, rfqOpenState);
 
             using (var client = new HttpClient(_server))
             {
@@ -271,7 +278,8 @@ namespace Aero.AcceptanceTests
             var aogPriority = TestData.CreatePriority("AOG", "AOG");
             var routinePriority = TestData.CreatePriority("Routine", "Routine");
             var highPriority = TestData.CreatePriority("High", "High");
-            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", customer);
+            var rfqOpenState = TestData.CreateRfqState("Open", "Open");
+            var rfq = TestData.CreateRFQ("RFQComment", new DateTime(2012, 10, 10), part, aogPriority, 12, "your_ref", new DateTime(2013, 10, 10), customer, rfqOpenState);
 
             using (var client = new HttpClient(_server))
             {

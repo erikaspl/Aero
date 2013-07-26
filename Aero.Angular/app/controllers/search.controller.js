@@ -1,6 +1,6 @@
 ﻿aero.controller('SearchCtrl',
-    ['$scope', '$location', '$dialog', 'Q', 'breeze', 'amplify', 'datacontext', 'logger',
-    function ($scope, $location, $dialog, Q, breeze, amplify, datacontext, logger) {
+    ['$scope', '$location', '$dialog', 'Q', 'breeze', 'amplify', 'datacontext', 'logger', 'AeroStore',
+    function ($scope, $location, $dialog, Q, breeze, amplify, datacontext, logger, AeroStore) {
 
         logger.log("creating SearchCtrl");
         $scope.searchPartText = "";
@@ -55,19 +55,8 @@
         $scope.modalOpen = false;
 
         $scope.order = function (row) {
-            amplify.store('selectedPartId', row.entity.id);
-
+            AeroStore.selectPart(row.entity.id);
             $scope.$broadcast('openRfqModal', row);
-
-            //var msgbox = $dialog.messageBox('Delete Item', 'Are you sure?', [{ label: 'Yes, I\'m sure', result: 'yes' }, { label: 'Nope', result: 'no' }]);
-            //msgbox.open().then(function (result) {
-            //    if (result === 'yes') {
-            //        //deleteItem(item);
-            //    }
-            //});
-            //$scope.showModalViaService();
-            //$location.search('part', row.entity.id);
-            //$location.path("/rfq");
         };
 
         $scope.skipSize = function () {

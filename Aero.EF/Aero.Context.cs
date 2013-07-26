@@ -33,5 +33,6 @@ namespace Aero.EF
         public DbSet<RFQ> RFQs { get; set; }
         public DbSet<PO> POes { get; set; }
         public DbSet<Priority> Priorities { get; set; }
+        public DbSet<RFQState> RFQStates { get; set; }
     }
 }

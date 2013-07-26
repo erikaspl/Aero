@@ -1,18 +1,22 @@
 ﻿aero.controller('RfqCtrl',
-    ['$scope', '$location', 'amplify', 'breeze', 'datacontext', 'logger', 'toastr', 'AeroStore',
-    function ($scope, $location, amplify, breeze, datacontext, logger, toastr, AeroStore) {
+    ['$scope', '$location', 'amplify', 'model', 'breeze', 'datacontext', 'logger', 'toastr', 'AeroStore',
+    function ($scope, $location, amplify, model, breeze, datacontext, logger, toastr, AeroStore) {
 
         logger.log("creating RfqCtrl");
-        $scope.partId = amplify.store('selectedPartId');
+        $scope.partId = AeroStore.getSelectedPart();
         $scope.part;
         $scope.quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-        datacontext.createEntity("RFQ").then(function (newRfq) {
-            $scope.rfq = newRfq;
-        });
-
         datacontext.loadRfqPriorities().then(function(data){
             $scope.priorities = data;
+        }).fail(function (error) {
+            console.log(error)
+        });
+
+        datacontext.createEntity("RFQ").then(function (newRfq) {
+            $scope.rfq = newRfq;
+        }).fail(function (error) {
+            console.log(error)
         });
 
         $scope.loadPart = function (partId) {
@@ -22,6 +26,12 @@
                 .fin(finish);
         };
 
+        $scope.$watch('partId', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                $scope.loadPart(newVal);
+            }
+        }, true);
+
 
         $scope.submitRfq = function () {
             var customerId = AeroStore.getCustomer()
@@ -29,10 +39,14 @@
                     $scope.rfq.customerId = customerId;
                     $scope.rfq.partId = $scope.part.id;
                     datacontext.saveEntity($scope.rfq)
-                        .done(function (message) {
-                            $scope.close();                            
+                        .then(function (message) {
+                            $scope.close();
+                            toastr.success("Your request for qutation has been saved.");
                             finish();
-                            toastr.success("your request for qutation successfully saved.");
+                        }, function () {
+                            $scope.close();
+                            toastr.error("Unable to send your request.");
+                            finish();
                         });
                 });            
         };
@@ -44,6 +58,7 @@
 
         function failed(error) {
             $scope.error = error.message;
+            logger.log(error);
         };
 
         function finish() {
@@ -55,6 +70,8 @@
         };
 
         $scope.$on('openRfqModal', function () {
+            model.rfqInitializer($scope.rfq);
+            $scope.partId = AeroStore.getSelectedPart();
             $scope.open();
         });
 
@@ -69,16 +86,7 @@
         }
 
         $scope.modalopts = {
-            template: 'app/views/rfq.view.html',
-            persist: true,
-            controller: 'RfqCtrl',
-            show: false,
-            backdrop: 'static',
-            socpe: $scope
+            backdropFade: true,
+            dialogFade: false
         };
-
-
-
-        $scope.loadPart($scope.partId);
-
     }]);

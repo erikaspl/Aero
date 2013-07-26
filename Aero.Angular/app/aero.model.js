@@ -6,7 +6,8 @@ aero.factory('model', ['$rootScope', function ($rootScope) {
     extendTodoList();
     
     var model = {
-        initialize: initialize
+        initialize: initialize,
+        rfqInitializer: rfqInitializer
     };
     
     return model;
@@ -15,7 +16,7 @@ aero.factory('model', ['$rootScope', function ($rootScope) {
     function initialize(context) {
         datacontext = context;
         var store = datacontext.metadataStore;
-        store.registerEntityTypeCtor("RFQ", null, rfqInitializer);
+        //store.registerEntityTypeCtor("RFQ", null, rfqInitializer);
         //store.registerEntityTypeCtor("TodoItem", null, todoItemInitializer);
         //store.registerEntityTypeCtor("TodoList", TodoList, todoListInitializer);
     }
@@ -32,6 +33,7 @@ aero.factory('model', ['$rootScope', function ($rootScope) {
         rfq.needBy = d;
         rfq.qty = 1;
         rfq.priorityId = 1;
+        rfq.rFQStateId = 1;
     }
 
     function todoListInitializer(todoList) {

@@ -20,6 +20,8 @@ using Castle.MicroKernel.Resolvers;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using Aero.Angular.Controllers;
+using Aero.Angular;
 
 
 namespace Aero.AcceptanceTests
@@ -39,7 +41,9 @@ namespace Aero.AcceptanceTests
         {
             var config = new HttpSelfHostConfiguration(_baseAddress);
             var container = new WindsorContainer();
-            container.Install(FromAssembly.Named("Aero.Controllers"));
+
+            container.Install(FromAssembly.Named("Aero.Angular"));
+            //container.Install(FromAssembly.Named("Aero.Controllers"));
 
             //config.Services.Replace(typeof(ITraceWriter), new Tracer());
    
@@ -52,6 +56,15 @@ namespace Aero.AcceptanceTests
         {
             MediaTypeFormatter formatter = new JsonMediaTypeFormatter();
             HttpContent content = new ObjectContent<T>(obj, formatter);
+            content.Headers.Add("X-Requested-With", "XMLHttpRequest");
+            return content;
+        }
+
+        public static JsonContent CreateJsonRequestMessage<T>(T obj)
+        {
+            var content = new JsonContent(obj);
+            content.Headers.ContentType.MediaType = "application/json";
+            content.Headers.Add("X-Requested-With", "XMLHttpRequest");
             return content;
         }
     }

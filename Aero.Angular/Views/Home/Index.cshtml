@@ -11,16 +11,32 @@
     }
 }
 <div class="container">
-        <div class="page-header">
-            <h1>@ViewBag.Title</h1>
-        </div>
+    @*    <div class="page-header">
+        <h1>@ViewBag.Title</h1>
+    </div>*@
     <div id="main-content" data-ng-app="aero">
         @if (@User.Identity.IsAuthenticated)
         {
+            <div class="navbar" bs-navbar>
+                <div class="navbar-inner">
+                    <a class="brand" href="#">Aero</a>
+                    <ul class="nav">
+                        <li data-match-route="/parts"><a href="#/parts">Parts</a></li>
+                        <li data-match-route="/myrfq"><a href="#/myrfq">My RFQ</a></li>
+                        @*<li data-match-route="/page-two.*"><a href="#/page-two/sub-a">Page Two</a></li>*@
+                    </ul>
+                </div>
+            </div>
+            
+            
             <div data-ng-view></div> <!-- The SPA Views go here -->
         }
         else
         {
+            <div class="page-header">
+                <h1>@ViewBag.Title</h1>
+            </div>            
+            
             @Html.Partial("_Authentication")
         }
     </div>

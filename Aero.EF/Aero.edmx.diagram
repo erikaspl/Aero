@@ -14,12 +14,14 @@
         <EntityTypeShape EntityType="Aero.RFQ" Width="1.5" PointX="9.5" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="Aero.PO" Width="1.5" PointX="0.5" PointY="2.25" IsExpanded="true" />
         <AssociationConnector Association="Aero.POPart" />
-        <EntityTypeShape EntityType="Aero.Priority" Width="1.5" PointX="9.75" PointY="4.25" />
+        <EntityTypeShape EntityType="Aero.Priority" Width="1.5" PointX="12.125" PointY="4.125" />
         <AssociationConnector Association="Aero.PriorityRFQ" />
         <AssociationConnector Association="Aero.FK_ContactCustommer" />
         <AssociationConnector Association="Aero.PartRFQ" />
         <AssociationConnector Association="Aero.CustomerRFQ" />
         <AssociationConnector Association="Aero.CustomerPO" />
+        <EntityTypeShape EntityType="Aero.RFQState" Width="1.5" PointX="3.75" PointY="5.125" />
+        <AssociationConnector Association="Aero.RFQStateRFQ" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

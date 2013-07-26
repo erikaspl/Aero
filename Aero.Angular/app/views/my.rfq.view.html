@@ -1,0 +1,14 @@
+﻿<div class="span4 offset4 text-center">
+    <span ng-hide="hidePagination()">
+        <pagination id="rfqPagination" num-pages="noOfPages" current-page="currentPage" class="pagination-small" max-size="maxSize" previous-text="&laquo;" next-text="&raquo;"></pagination>
+    </span>
+</div>
+<div class="row">
+    <div class="rfqWrapper">
+        <div class="span12">
+            <div id="myRfqGrid">
+                <div class="searchGrid" ng-grid="gridOptions"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,6 +2,7 @@ using System.Web.Http;
 using System.Web.Http.OData.Builder;
 using Aero.Model;
 using Microsoft.Data.Edm;
+using Newtonsoft.Json.Serialization;
 
 [assembly: WebActivator.PreApplicationStartMethod(
     typeof(Aero.App_Start.BreezeWebApiConfig), "RegisterBreezePreStart")]
@@ -24,11 +25,21 @@ namespace Aero.App_Start
 
         public static void Register(HttpConfiguration config)
         {
-            config.Routes.MapODataRoute("Aero", "odata", GetImplicitEdm());
+            //config.Routes.MapODataRoute("Aero", "odata", GetImplicitEdm());
             config.Routes.MapHttpRoute(
               name: "BreezeApi",
-              routeTemplate: "api/{controller}/{action}"
+              routeTemplate: "api/{controller}/{action}",
+              defaults: new
+                {
+                    controller = "Aero",
+                    action = "Parts"
+                }
           );
+
+            config.Formatters.XmlFormatter.UseXmlSerializer = true;
+
+            //config.Formatters.JsonFormatter.SerializerSettings.ContractResolver =
+            //    new CamelCasePropertyNamesContractResolver();
         }
 
         private static IEdmModel GetImplicitEdm()
@@ -42,6 +53,7 @@ namespace Aero.App_Start
             builder.EntitySet<RFQ>("RFQ");
             builder.EntitySet<PO>("PO");
             builder.EntitySet<Priority>("Priorities");
+            builder.EntitySet<RFQState>("RFQState");
             return builder.GetEdmModel();
         }
     }
